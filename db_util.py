@@ -27,6 +27,11 @@ def get_anime_name(anime_id):
 def get_episode_list():
     return list(episode_col.find({"download_flag": {"$eq": False}}).sort("pub_date", -1))
 
+
+def get_episode_pub_date(episode_id):
+    return episode_col.find_one({"_id": {"$eq": episode_id}}, {"pub_date": 1})['pub_date']
+
+
 # 修改
 
 def change_status(anime_id):
@@ -49,3 +54,8 @@ def add_sub_anime(data_dict):
 
 def add_episode(data_dict):
     episode_col.insert_one(data_dict)
+
+
+# 删除
+def delete_episode(episode_id):
+    episode_col.delete_one({"_id": episode_id})

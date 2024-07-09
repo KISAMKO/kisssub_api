@@ -3,6 +3,7 @@ import time
 
 import requests
 import xmltodict
+from pymongo.errors import DuplicateKeyError
 
 from db_util import *
 
@@ -55,6 +56,12 @@ def build_episode_dict(anime_data, data):
     return episode
 
 
+def check_episode(ep_dict):
+    if get_episode_pub_date(ep_dict['_id']) < ep_dict['pub_date']:  # 数据库中的是旧版本
+        delete_episode(ep_dict['_id'])
+        add_episode(ep_dict)
+
+
 def get_episode(anime_data):
     r = requests.get(anime_data['link'], headers=headers)
     r.encoding = 'utf-8'
@@ -66,7 +73,10 @@ def get_episode(anime_data):
         for d in data:
             if get_timestamp(d['pubDate']) > anime_data['last_time']:
                 episode = build_episode_dict(anime_data, d)
-                add_episode(episode)
+                try:
+                    add_episode(episode)
+                except DuplicateKeyError:
+                    check_episode(episode)
             else:
                 break
         update_timestamp(anime_data['_id'], last_time)  # 更新last_time
