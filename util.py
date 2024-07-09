@@ -36,6 +36,7 @@ def get_ep(raw_title):
         pattern = re.compile(r'(?<=\[)(\d\d)(?=\]|END\])')
         ep = pattern.search(raw_title).group(1)
     except AttributeError:
+        print(raw_title)
         pattern = re.compile(r'(?<=- )(\d\d)(?= \[)')
         ep = pattern.search(raw_title).group(1)
     if 0 <= int(ep) <= 70:
