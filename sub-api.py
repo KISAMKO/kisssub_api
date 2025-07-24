@@ -50,7 +50,6 @@ def del_sub():
 @app.route('/data/edit_sub', methods=["post"])
 def edit_tran():
     data = request.get_json()['data']
-    print(data)
     update_sub(data)
     msg = {"message": "ok"}
     return jsonify(msg)
