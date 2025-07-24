@@ -39,6 +39,23 @@ def add_sub():
     return jsonify(msg)
 
 
+@app.route('/data/delete_sub', methods=["post"])
+def del_sub():
+    data = request.get_json()
+    delete_sub_anime(data['id'])
+    msg = {"message": "ok"}
+    return jsonify(msg)
+
+
+@app.route('/data/edit_sub', methods=["post"])
+def edit_tran():
+    data = request.get_json()['data']
+    print(data)
+    update_sub(data)
+    msg = {"message": "ok"}
+    return jsonify(msg)
+
+
 @app.route('/data/new_episode')
 def show_new_episode():
     return jsonify(get_episode_list())

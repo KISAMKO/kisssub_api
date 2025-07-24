@@ -47,6 +47,12 @@ def update_timestamp(anime_id, new_timestamp):
     col.update_one({"_id": {"$eq": anime_id}}, {"$set": {"last_time": new_timestamp}})
 
 
+def update_sub(data):
+    update_query = {"_id": data['_id']}
+    new_values = {"$set": {"name": data['name'], "subtitle": data['subtitle'], "link": data['link'], "last_time": data['last_time']}}
+    col.update_one(update_query, new_values)
+
+
 # 增加
 def add_sub_anime(data_dict):
     col.insert_one(data_dict)
@@ -57,5 +63,9 @@ def add_episode(data_dict):
 
 
 # 删除
+def delete_sub_anime(anime_id):
+    col.delete_one({"_id": anime_id})
+
+
 def delete_episode(episode_id):
     episode_col.delete_one({"_id": episode_id})
