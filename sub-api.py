@@ -12,6 +12,12 @@ def get_sub_anime():
     return jsonify(get_all_sub_list())
 
 
+@app.route('/data/bangumi_info')
+def get_bangumi_info():
+    return jsonify(get_bgm_info())
+
+
+
 @app.route('/data/switch', methods=["post"])
 def switch_change():
     anime_id = request.get_json()['id']

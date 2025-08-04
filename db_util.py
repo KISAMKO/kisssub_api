@@ -32,6 +32,13 @@ def get_episode_pub_date(episode_id):
     return episode_col.find_one({"_id": {"$eq": episode_id}}, {"pub_date": 1})['pub_date']
 
 
+def get_bgm_info():
+    result_list = []
+    for d in list(col.find({"bangumi_id": {"$ne": 10}}, {"name": 1, "bangumi_id": 1})):
+        result_list.append({"title": d['name'],"url": "https://api.bgm.tv/v0/subjects/{}/image?type=common".format(d['bangumi_id'])})
+    return result_list
+
+
 # 修改
 
 def change_status(anime_id):
@@ -49,7 +56,8 @@ def update_timestamp(anime_id, new_timestamp):
 
 def update_sub(data):
     update_query = {"_id": data['_id']}
-    new_values = {"$set": {"name": data['name'], "subtitle": data['subtitle'], "link": data['link'], "last_time": data['last_time']}}
+    new_values = {"$set": {"name": data['name'], "subtitle": data['subtitle'], "link": data['link'],
+                           "bangumi_id": data['bangumi_id'], "last_time": data['last_time']}}
     col.update_one(update_query, new_values)
 
 
