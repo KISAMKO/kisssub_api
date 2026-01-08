@@ -31,23 +31,29 @@ headers = {
 }
 
 
-def get_ep(raw_title):
+def get_ep(raw_title, fansub):
+    match fansub:
+        case "LoliHouse":
+            pattern = re.compile(r'(?<=- )(\d\d)(?= \[)')
+        case "幻樱字幕组":
+            pattern = re.compile(r'(?<=【)(\d\d)(?=】)')
+        case _:
+            pattern = re.compile(r'(?<=\[)(\d\d)(?=\]|END\]|[vV]\d\])')
     try:
-        pattern = re.compile(r'(?<=\[)(\d\d)(?=\]|END\]|[vV]\d\])')
         ep = pattern.search(raw_title).group(1)
     except AttributeError:
-        pattern = re.compile(r'(?<=- )(\d\d)(?= \[)')
-        ep = pattern.search(raw_title).group(1)
+        pass
     if 0 <= int(ep) <= 70:
         return ep
 
 
 def build_episode_dict(anime_data, data):
     episode = {}
-    episode['_id'] = int("{}{}".format(anime_data['_id'], get_ep(data['title'])))
+    ep = get_ep(data['title'], anime_data['subtitle'])
+    episode['_id'] = int("{}{}".format(anime_data['_id'], ep))
     episode['anime_id'] = anime_data['_id']
     episode['name'] = anime_data['name']
-    episode['ep'] = int(get_ep(data['title']))
+    episode['ep'] = ep
     episode['raw_title'] = data['title']
     episode['magnet'] = get_magnet_link(data['link'])
     episode['torrent'] = data["enclosure"]["@url"]
